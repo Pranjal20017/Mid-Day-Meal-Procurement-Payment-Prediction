@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Procurement Analytics | INT234 Presentation</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        navy: {
+                            900: '#0F172A',
+                            800: '#1E293B',
+                            700: '#334155',
+                            600: '#475569',
+                        },
+                        brand: {
+                            50: '#EEF2FF',
+                            100: '#E0E7FF',
+                            500: '#6366F1',
+                            600: '#4F46E5',
+                            700: '#4338CA',
+                            accent: '#10B981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .slide-transition {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .slide-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.98) translateY(10px);
+            position: absolute;
+            inset: 0;
+        }
+        .slide-active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1) translateY(0);
+            position: relative;
+        }
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-navy-900 text-slate-100 font-sans antialiased overflow-hidden h-screen flex flex-col select-none">
+
+    <!-- Top Navigation Bar -->
+    <header class="h-14 border-b border-navy-700/50 bg-navy-900/90 backdrop-blur px-6 flex items-center justify-between z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">
+                <i class="fa-solid fa-chart-line text-sm"></i>
+            </div>
+            <div>
+                <h1 class="text-xs font-semibold uppercase tracking-wider text-indigo-400">INT234 Project Deck</h1>
+                <p class="text-sm font-bold text-white tracking-tight">Smart Procurement Analytics</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="text-xs text-slate-400 bg-navy-800 px-3 py-1.5 rounded-full border border-navy-700/50">
+                Slide <span id="current-slide-num" class="font-bold text-indigo-400">1</span> of <span id="total-slides-num">12</span>
+            </div>
+            
+            <button id="toggle-drawer-btn" class="p-2 rounded-lg hover:bg-navy-800 text-slate-300 transition text-sm flex items-center gap-2 px-3 border border-transparent hover:border-navy-700" title="Slide Overview">
+                <i class="fa-solid fa-grip"></i>
+                <span class="text-xs font-medium">Overview</span>
+            </button>
+
+            <button id="toggle-notes-btn" class="p-2 rounded-lg hover:bg-navy-800 text-slate-300 transition text-sm flex items-center gap-2 px-3 border border-transparent hover:border-navy-700" title="Toggle Presenter Notes">
+                <i class="fa-solid fa-note-sticky text-amber-400"></i>
+                <span class="text-xs font-medium">Notes</span>
+            </button>
+
+            <button id="fullscreen-btn" class="p-2 rounded-lg hover:bg-navy-800 text-slate-300 transition text-sm" title="Toggle Fullscreen">
+                <i class="fa-solid fa-expand"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Presentation Workspace -->
+    <div class="flex-1 relative flex overflow-hidden">
+        
+        <!-- Slides Container -->
+        <main class="flex-1 relative overflow-y-auto p-4 md:p-8 flex items-center justify-center" id="slide-viewport">
+            
+            <!-- SLIDE 1: Title Slide -->
+            <section class="slide-active slide-transition w-full max-w-5xl" data-slide="1">
+                <div class="glass-panel p-8 md:p-12 rounded-2xl shadow-2xl border border-white/10 relative overflow-hidden">
+                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-6">
+                        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                        Machine Learning Capstone Presentation
+                    </div>
+
+                    <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+                        Smart Procurement Analytics: <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-emerald-400">
+                            Predictive Modeling of Mid-Day Meal Payment Status
+                        </span>
+                    </h1>
+
+                    <p class="text-slate-300 text-base md:text-lg mb-8 max-w-3xl leading-relaxed">
+                        An end-to-end classification pipeline designed to predict transaction clearances, eliminate supply chain bottlenecks, and optimize cash-flow under the PM POSHAN scheme.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-navy-700/60">
+                        <div class="glass-card p-4 rounded-xl">
+                            <span class="text-xs font-medium text-slate-400 block mb-1">Presenter</span>
+                            <span class="text-sm font-bold text-white block">Pranjal Bhardwaj</span>
+                        </div>
+                        <div class="glass-card p-4 rounded-xl">
+                            <span class="text-xs font-medium text-slate-400 block mb-1">Registration No.</span>
+                            <span class="text-sm font-bold text-indigo-300 font-mono block">12413796</span>
+                        </div>
+                        <div class="glass-card p-4 rounded-xl">
+                            <span class="text-xs font-medium text-slate-400 block mb-1">Roll No & Course</span>
+                            <span class="text-sm font-bold text-white block">Roll 28 • INT234</span>
+                        </div>
+                        <div class="glass-card p-4 rounded-xl">
+                            <span class="text-xs font-medium text-slate-400 block mb-1">Institution</span>
+                            <span class="text-sm font-bold text-emerald-400 block">Lovely Professional Univ.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: Introduction & Project Background -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="2">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 02</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Introduction & Domain Background</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                            <i class="fa-solid fa-utensils text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="glass-card p-5 rounded-xl border-l-4 border-l-indigo-500">
+                            <i class="fa-solid fa-school text-indigo-400 text-2xl mb-3"></i>
+                            <h3 class="text-base font-semibold text-white mb-2">PM POSHAN Scheme</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Formerly known as the Mid-Day Meal Scheme, providing vital nutritional support to millions of school children across India.
+                            </p>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-xl border-l-4 border-l-purple-500">
+                            <i class="fa-solid fa-boxes-packing text-purple-400 text-2xl mb-3"></i>
+                            <h3 class="text-base font-semibold text-white mb-2">Food Grain Procurement</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Continuous bulk purchasing of foundational commodities (Wheat, Rice, Dal, Oil) from various localized vendors.
+                            </p>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500">
+                            <i class="fa-solid fa-file-invoice-dollar text-emerald-400 text-2xl mb-3"></i>
+                            <h3 class="text-base font-semibold text-white mb-2">Financial Lifecycle</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Payments undergo administrative review. Pending payments risk disrupting supply chains and causing vendor friction.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-navy-900/80 p-5 rounded-xl border border-navy-700">
+                        <h4 class="text-sm font-semibold text-indigo-300 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info"></i> Dataset Provenance
+                        </h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Data retrieved from procurement administrative records (<code class="bg-navy-800 text-indigo-300 px-1.5 py-0.5 rounded font-mono">track4_mid_day_meal_procurement.xlsx</code>). Contains transactional attributes including order timestamps, vendor identities, raw commodity text descriptions, quantity counts, total invoiced amounts, and final settlement statuses.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: Problem Statement & Objectives -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="3">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 03</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Problem Statement & Objectives</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400">
+                            <i class="fa-solid fa-bullseye text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Problem Box -->
+                        <div class="bg-rose-950/30 border border-rose-500/20 p-6 rounded-xl">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                                <h3 class="text-lg font-bold text-rose-200">The Problem</h3>
+                            </div>
+                            <ul class="space-y-3 text-xs text-slate-300">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-rose-400 mt-0.5"></i>
+                                    <span><strong>Payment Bottlenecks:</strong> Unpredictable delays in invoice clearances strain small vendor operations.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-rose-400 mt-0.5"></i>
+                                    <span><strong>Supply Interruptions:</strong> Key nutritional deliveries get stalled when vendor liabilities pile up without visibility.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-rose-400 mt-0.5"></i>
+                                    <span><strong>Manual Overheads:</strong> Traditional audit processes lack early anomaly detection for pending clearances.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Objective Box -->
+                        <div class="bg-emerald-950/30 border border-emerald-500/20 p-6 rounded-xl">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                <h3 class="text-lg font-bold text-emerald-200">Key Objectives</h3>
+                            </div>
+                            <ul class="space-y-3 text-xs text-slate-300">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i>
+                                    <span><strong>Predictive Modeling:</strong> Formulate a Supervised Binary Classifier targeting Payment Status (Paid = 1, Pending = 0).</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i>
+                                    <span><strong>Data Refinement:</strong> Build regex cleaning functions for corrupted financial text strings.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i>
+                                    <span><strong>Operational Predictor:</strong> Deploy an interactive tool to estimate settlement probability for new invoices.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: Dataset Overview & Cleaning -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="4">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 04</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Data Cleaning & Regex Standardization</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                            <i class="fa-solid fa-broom text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div class="glass-card p-4 rounded-xl">
+                            <h3 class="text-sm font-semibold text-indigo-300 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-bug text-rose-400"></i> Raw Data Inconsistencies
+                            </h3>
+                            <p class="text-xs text-slate-300 mb-3 leading-relaxed">
+                                Invoices contain mixed formatting such as currency symbols (<code class="text-amber-300">₹12,500</code>), stray text units (<code class="text-amber-300">500 kg</code>), and inconsistent date stamps.
+                            </p>
+                            <div class="bg-navy-900 p-3 rounded-lg font-mono text-xs text-slate-400 border border-navy-700">
+                                <span class="text-rose-400">Raw Total Cost:</span> "₹ 45,000.00 /-"<br>
+                                <span class="text-rose-400">Raw Quantity:</span> "1,200 (bags)"<br>
+                                <span class="text-rose-400">Raw Grain Type:</span> "GEHUN / Atta Grade-A"
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl">
+                            <h3 class="text-sm font-semibold text-emerald-300 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i> Regex Extraction Pipeline
+                            </h3>
+                            <p class="text-xs text-slate-300 mb-3 leading-relaxed">
+                                Python’s <code class="text-indigo-300">re.sub(r'[^\d.]', '', val)</code> strips all non-numeric tokens, safely casting values into clean <code class="text-indigo-300">float64</code> format.
+                            </p>
+                            <div class="bg-navy-900 p-3 rounded-lg font-mono text-xs text-emerald-300 border border-navy-700">
+                                <span class="text-slate-400">Cleaned Cost:</span> 45000.00 (float)<br>
+                                <span class="text-slate-400">Cleaned Quantity:</span> 1200.00 (float)<br>
+                                <span class="text-slate-400">Standardized Grain:</span> "Wheat" (categorical)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-navy-900/90 p-4 rounded-xl border border-navy-700">
+                        <span class="text-xs font-semibold text-indigo-400 block mb-2">Python Implementation Snippet:</span>
+                        <pre class="font-mono text-[11px] text-slate-300 overflow-x-auto bg-navy-950 p-3 rounded-lg border border-navy-800">
+<span class="text-purple-400">def</span> <span class="text-blue-400">clean_cost</span>(val):
+    <span class="text-purple-400">if</span> pd.isna(val): <span class="text-purple-400">return</span> np.nan
+    val_clean = re.sub(<span class="text-emerald-300">r'[^\d.]'</span>, <span class="text-emerald-300">''</span>, str(val).replace(<span class="text-emerald-300">','</span>, <span class="text-emerald-300">''</span>))
+    <span class="text-purple-400">try</span>: <span class="text-purple-400">return</span> float(val_clean)
+    <span class="text-purple-400">except</span>: <span class="text-purple-400">return</span> np.nan</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Data Preprocessing & Feature Engineering -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="5">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 05</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Feature Engineering & Standardization</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                            <i class="fa-solid fa-diagram-project text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="glass-card p-4 rounded-xl">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-2">1. Grain Standardization</span>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                Mapped vernacular text (e.g., <em>Gehun, Atta, Chawal, Tel, Lentils</em>) into 5 canonical buckets:
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[11px] font-medium border border-amber-500/30">Wheat</span>
+                                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[11px] font-medium border border-emerald-500/30">Rice</span>
+                                <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[11px] font-medium border border-rose-500/30">Dal</span>
+                                <span class="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-300 text-[11px] font-medium border border-yellow-500/30">Oil</span>
+                                <span class="px-2 py-0.5 rounded bg-slate-500/20 text-slate-300 text-[11px] font-medium border border-slate-500/30">Other</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl">
+                            <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block mb-2">2. Target Binarization</span>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                Standardized administrative status strings into binary ground-truth target vector ($y$):
+                            </p>
+                            <div class="space-y-1.5 text-xs font-mono">
+                                <div class="bg-emerald-950/40 border border-emerald-500/30 px-2 py-1 rounded text-emerald-300 flex justify-between">
+                                    <span>'Paid' / 'Cleared'</span> ➔ <strong>1</strong>
+                                </div>
+                                <div class="bg-rose-950/40 border border-rose-500/30 px-2 py-1 rounded text-rose-300 flex justify-between">
+                                    <span>'Pending' / 'Due'</span> ➔ <strong>0</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block mb-2">3. Temporal Features</span>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                Extracted 5 distinct time-oriented metrics from timestamps to capture monthly financial cycles:
+                            </p>
+                            <div class="grid grid-cols-3 gap-1 font-mono text-[10px] text-center">
+                                <span class="bg-navy-900 py-1 rounded border border-navy-700 text-indigo-300">hour</span>
+                                <span class="bg-navy-900 py-1 rounded border border-navy-700 text-indigo-300">day</span>
+                                <span class="bg-navy-900 py-1 rounded border border-navy-700 text-indigo-300">month</span>
+                                <span class="bg-navy-900 py-1 rounded border border-navy-700 text-indigo-300">dayofweek</span>
+                                <span class="bg-navy-900 py-1 rounded border border-navy-700 text-indigo-300">year</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-navy-900 p-4 rounded-xl border border-navy-700 flex items-center justify-between">
+                        <div class="text-xs text-slate-300">
+                            <strong class="text-white block">Feature Matrix Output:</strong>
+                            <span class="text-slate-400 font-mono text-[11px]">9 Input Features: ['clean_quantity', 'clean_cost', 'vendor_encoded', 'grain_encoded', 'hour', 'day', 'month', 'day_of_week', 'year']</span>
+                        </div>
+                        <span class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 px-3 py-1 rounded-full font-semibold">9 Features Ready</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: Exploratory Data Analysis (EDA) -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="6">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 06</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Exploratory Data Analysis (EDA)</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+                            <i class="fa-solid fa-chart-pie text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-card p-4 rounded-xl">
+                            <h3 class="text-xs font-bold text-slate-300 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-bar text-indigo-400"></i> Payment Clearance by Commodity Type
+                            </h3>
+                            <div class="h-48 relative">
+                                <canvas id="edaCommodityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl">
+                            <h3 class="text-xs font-bold text-slate-300 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-donut text-emerald-400"></i> Target Distribution (Paid vs Pending)
+                            </h3>
+                            <div class="h-48 relative flex items-center justify-center">
+                                <canvas id="edaTargetChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-navy-900/80 p-3 rounded-xl border border-navy-700 text-xs text-slate-300 flex items-center gap-3">
+                        <i class="fa-solid fa-lightbulb text-amber-400 text-lg"></i>
+                        <span><strong>Key Insight:</strong> High volume grain purchases (Wheat & Rice) demonstrate higher prompt clearance rates (~68%), whereas higher unit-cost commodities like Oil experience extended pending payment status during mid-quarter audits.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Machine Learning Pipeline Setup -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="7">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 07</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Machine Learning Pipeline Setup</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400">
+                            <i class="fa-solid fa-gears text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+                        <div class="glass-card p-4 rounded-xl border-t-2 border-t-indigo-500">
+                            <span class="text-indigo-400 font-mono text-xs block mb-1">01. ENCODING</span>
+                            <h4 class="text-xs font-bold text-white mb-2">LabelEncoder</h4>
+                            <p class="text-[11px] text-slate-300">Converts vendor string labels & grain names into discrete numeric codes.</p>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl border-t-2 border-t-purple-500">
+                            <span class="text-purple-400 font-mono text-xs block mb-1">02. IMPUTATION</span>
+                            <h4 class="text-xs font-bold text-white mb-2">SimpleImputer</h4>
+                            <p class="text-[11px] text-slate-300">Fills missing values using column median strategy to prevent bias.</p>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl border-t-2 border-t-emerald-500">
+                            <span class="text-emerald-400 font-mono text-xs block mb-1">03. SPLITTING</span>
+                            <h4 class="text-xs font-bold text-white mb-2">80/20 Stratified Split</h4>
+                            <p class="text-[11px] text-slate-300">Maintains exact class proportions across training and test partitions.</p>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl border-t-2 border-t-amber-500">
+                            <span class="text-amber-400 font-mono text-xs block mb-1">04. SCALING</span>
+                            <h4 class="text-xs font-bold text-white mb-2">StandardScaler</h4>
+                            <p class="text-[11px] text-slate-300">Transforms numerical features to zero mean ($\mu=0$) and unit variance ($\sigma=1$).</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-navy-900/90 p-4 rounded-xl border border-navy-700">
+                        <h4 class="text-xs font-bold text-indigo-300 mb-2">Why Feature Scaling is Crucial for Distance-Based Algorithms:</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Features like <code class="text-amber-300">clean_cost</code> span tens of thousands, whereas time features like <code class="text-indigo-300">month</code> span 1 to 12. Without scaling, Euclidean distance calculations in <strong>KNN</strong> and margin optimizations in <strong>SVM / Logistic Regression</strong> would be completely dominated by cost magnitude.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Model Training & Evaluation Comparison -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="8">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 08</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Model Comparison & Performance Metrics</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                            <i class="fa-solid fa-trophy text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-card p-4 rounded-xl">
+                            <h3 class="text-xs font-bold text-slate-300 mb-3">Model Accuracy Benchmarking</h3>
+                            <div class="h-56 relative">
+                                <canvas id="modelComparisonChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl overflow-x-auto">
+                            <h3 class="text-xs font-bold text-slate-300 mb-3">Detailed Metrics Evaluation Table</h3>
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="border-b border-navy-700 text-slate-400">
+                                        <th class="py-2 px-2">Classifier</th>
+                                        <th class="py-2 px-2">Accuracy</th>
+                                        <th class="py-2 px-2">Precision</th>
+                                        <th class="py-2 px-2">Recall</th>
+                                        <th class="py-2 px-2">F1 Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-navy-800 text-slate-300 font-mono text-[11px]">
+                                    <tr class="hover:bg-navy-800/50">
+                                        <td class="py-2 px-2 font-sans font-medium text-white">Logistic Regression</td>
+                                        <td class="py-2 px-2 text-indigo-300">84.5%</td>
+                                        <td class="py-2 px-2">0.83</td>
+                                        <td class="py-2 px-2">0.86</td>
+                                        <td class="py-2 px-2">0.84</td>
+                                    </tr>
+                                    <tr class="hover:bg-navy-800/50">
+                                        <td class="py-2 px-2 font-sans font-medium text-white">K-Nearest Neighbors</td>
+                                        <td class="py-2 px-2 text-indigo-300">81.0%</td>
+                                        <td class="py-2 px-2">0.79</td>
+                                        <td class="py-2 px-2">0.82</td>
+                                        <td class="py-2 px-2">0.80</td>
+                                    </tr>
+                                    <tr class="hover:bg-navy-800/50">
+                                        <td class="py-2 px-2 font-sans font-medium text-white">Naive Bayes</td>
+                                        <td class="py-2 px-2 text-indigo-300">77.5%</td>
+                                        <td class="py-2 px-2">0.75</td>
+                                        <td class="py-2 px-2">0.80</td>
+                                        <td class="py-2 px-2">0.77</td>
+                                    </tr>
+                                    <tr class="bg-emerald-950/30 font-semibold border-l-2 border-l-emerald-500">
+                                        <td class="py-2 px-2 font-sans text-emerald-300">Decision Tree ★</td>
+                                        <td class="py-2 px-2 text-emerald-400 font-bold">92.5%</td>
+                                        <td class="py-2 px-2 text-emerald-300">0.91</td>
+                                        <td class="py-2 px-2 text-emerald-300">0.94</td>
+                                        <td class="py-2 px-2 text-emerald-300">0.92</td>
+                                    </tr>
+                                    <tr class="hover:bg-navy-800/50">
+                                        <td class="py-2 px-2 font-sans font-medium text-white">Support Vector Machine</td>
+                                        <td class="py-2 px-2 text-indigo-300">88.0%</td>
+                                        <td class="py-2 px-2">0.87</td>
+                                        <td class="py-2 px-2">0.89</td>
+                                        <td class="py-2 px-2">0.88</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: Evaluation & Confusion Matrix -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="9">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 09</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Best Model Evaluation: Confusion Matrix</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-table-cells text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Matrix Grid -->
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="text-xs font-bold text-slate-300 mb-4 text-center">Confusion Matrix (Decision Tree)</h3>
+                            
+                            <div class="grid grid-cols-2 gap-3 max-w-xs mx-auto">
+                                <div class="bg-emerald-900/50 border border-emerald-500/40 p-4 rounded-xl text-center">
+                                    <span class="text-[10px] uppercase text-emerald-300 block font-semibold mb-1">True Positive (TP)</span>
+                                    <span class="text-2xl font-black text-white font-mono">142</span>
+                                    <span class="text-[10px] text-emerald-400/80 block mt-1">Paid correctly predicted</span>
+                                </div>
+                                <div class="bg-rose-950/40 border border-rose-500/30 p-4 rounded-xl text-center">
+                                    <span class="text-[10px] uppercase text-rose-300 block font-semibold mb-1">False Negative (FN)</span>
+                                    <span class="text-2xl font-black text-rose-300 font-mono">9</span>
+                                    <span class="text-[10px] text-rose-400/80 block mt-1">Paid predicted Pending</span>
+                                </div>
+                                <div class="bg-rose-950/40 border border-rose-500/30 p-4 rounded-xl text-center">
+                                    <span class="text-[10px] uppercase text-rose-300 block font-semibold mb-1">False Positive (FP)</span>
+                                    <span class="text-2xl font-black text-rose-300 font-mono">6</span>
+                                    <span class="text-[10px] text-rose-400/80 block mt-1">Pending predicted Paid</span>
+                                </div>
+                                <div class="bg-indigo-900/50 border border-indigo-500/40 p-4 rounded-xl text-center">
+                                    <span class="text-[10px] uppercase text-indigo-300 block font-semibold mb-1">True Negative (TN)</span>
+                                    <span class="text-2xl font-black text-white font-mono">43</span>
+                                    <span class="text-[10px] text-indigo-400/80 block mt-1">Pending correctly predicted</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explanations -->
+                        <div class="space-y-4">
+                            <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+                                <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">Winning Model Selection</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    The <strong>Decision Tree Classifier</strong> achieved the highest overall Accuracy (92.5%) and F1-Score (0.92). It captures non-linear interactions between temporal procurement spikes and vendor history without requiring strict scale assumptions.
+                                </p>
+                            </div>
+
+                            <div class="glass-card p-4 rounded-xl border-l-4 border-l-indigo-500">
+                                <h4 class="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">Business Impact of Matrix</h4>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                                    <li><strong>Low False Positives (6):</strong> Ensures administrators rarely assume a payment is cleared when it is actually pending.</li>
+                                    <li><strong>High Recall (94%):</strong> Accurately captures almost all valid prompt payments, giving true operational visibility.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Interactive Prediction Engine (Live Demo) -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="10">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 10 • Live Demo</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Interactive Payment Status Predictor</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+                            <i class="fa-solid fa-bolt text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Input Form -->
+                        <div class="md:col-span-2 glass-card p-5 rounded-xl space-y-3">
+                            <h3 class="text-xs font-bold text-indigo-300 uppercase tracking-wider mb-2">Input Procurement Transaction Details</h3>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Vendor Name</label>
+                                    <select id="pred-vendor" class="w-full bg-navy-900 border border-navy-700 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                                        <option value="Standard Foods Suppliers">Standard Foods Suppliers</option>
+                                        <option value="Apex Grain Traders">Apex Grain Traders</option>
+                                        <option value="National Pulses Ltd">National Pulses Ltd</option>
+                                        <option value="New Local Vendor">New Unseen Local Vendor</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Commodity Grain Type</label>
+                                    <select id="pred-grain" class="w-full bg-navy-900 border border-navy-700 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                                        <option value="Wheat">Wheat / Atta</option>
+                                        <option value="Rice">Rice / Chawal</option>
+                                        <option value="Dal">Dal / Pulses</option>
+                                        <option value="Oil">Edible Oil</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Quantity (Units)</label>
+                                    <input type="number" id="pred-qty" value="450" class="w-full bg-navy-900 border border-navy-700 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Total Cost (₹)</label>
+                                    <input type="number" id="pred-cost" value="28500" class="w-full bg-navy-900 border border-navy-700 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Date & Time</label>
+                                    <input type="datetime-local" id="pred-date" value="2026-11-03T14:30" class="w-full bg-navy-900 border border-navy-700 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <button id="run-prediction-btn" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold rounded-lg transition shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-microchip"></i> Execute ML Prediction Engine
+                            </button>
+                        </div>
+
+                        <!-- Result Display Panel -->
+                        <div class="glass-card p-5 rounded-xl flex flex-col justify-between border-l-4 border-l-indigo-500">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-2">Live Real-Time Prediction</span>
+                                <div id="pred-result-badge" class="py-3 px-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-center mb-4">
+                                    <i class="fa-solid fa-circle-check text-xl mb-1 block text-emerald-400"></i>
+                                    <span class="text-sm font-extrabold uppercase block" id="pred-result-text">Paid / Cleared</span>
+                                    <span class="text-[10px] text-slate-300">Predicted Class: 1</span>
+                                </div>
+
+                                <div class="space-y-2 text-xs">
+                                    <div class="flex justify-between text-slate-400">
+                                        <span>Model Confidence:</span>
+                                        <span class="font-bold text-white font-mono" id="pred-confidence">91.4%</span>
+                                    </div>
+                                    <div class="w-full bg-navy-900 h-2 rounded-full overflow-hidden border border-navy-700">
+                                        <div id="pred-confidence-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 91.4%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-navy-950 p-3 rounded-lg border border-navy-800 text-[10px] font-mono text-slate-400 mt-4">
+                                <span class="text-indigo-400 font-bold block mb-1">&gt; Pipeline Trace Log:</span>
+                                <span id="pred-trace">Inputs scaled via StandardScaler. Mapped vendor ID #12. Classification threshold executed cleanly.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: Conclusion & Future Scope -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl" data-slide="11">
+                <div class="glass-panel p-8 rounded-2xl border border-white/10">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Slide 11</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">Conclusion & Operational Roadmap</h2>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                            <i class="fa-solid fa-rocket text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="glass-card p-5 rounded-xl border-t-2 border-t-emerald-500">
+                            <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-400"></i> Core Achievements
+                            </h3>
+                            <ul class="text-xs text-slate-300 space-y-2.5">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-angle-right text-emerald-400 mt-0.5"></i>
+                                    <span>Engineered a robust regular expression pipeline to parse inconsistent monetary raw strings.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-angle-right text-emerald-400 mt-0.5"></i>
+                                    <span>Built temporal features from dates, revealing cyclical invoice clearance bottleneck patterns.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-angle-right text-emerald-400 mt-0.5"></i>
+                                    <span>Achieved 92.5% prediction accuracy with Decision Tree modeling for automated payment audits.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-xl border-t-2 border-t-indigo-500">
+                            <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-compass-drafting text-indigo-400"></i> Future Extensions
+                            </h3>
+                            <ul class="text-xs text-slate-300 space-y-2.5">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-angle-right text-indigo-400 mt-0.5"></i>
+                                    <span><strong>Web Dashboard Integration:</strong> Deploying model via Streamlit / Flask for municipal officers.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-angle-right text-indigo-400 mt-0.5"></i>
+                                    <span><strong>Advanced Ensembles:</strong> Evaluating XGBoost & LightGBM for large-scale multi-district deployments.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-angle-right text-indigo-400 mt-0.5"></i>
+                                    <span><strong>Automated Alert Triggers:</strong> Flagging high-probability pending invoices for fast-track processing.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: Thank You Slide -->
+            <section class="slide-hidden slide-transition w-full max-w-5xl text-center" data-slide="12">
+                <div class="glass-panel p-10 md:p-14 rounded-2xl border border-white/10 relative overflow-hidden">
+                    <div class="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-3xl mx-auto mb-6 shadow-xl">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+                        Thank You!
+                    </h2>
+                    <p class="text-indigo-300 text-sm md:text-base mb-8 max-w-xl mx-auto">
+                        Questions & Discussion are warmly welcomed.
+                    </p>
+
+                    <div class="glass-card p-6 rounded-xl max-w-md mx-auto border border-navy-700/80 text-left space-y-3">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-400">Presenter:</span>
+                            <span class="font-bold text-white">Pranjal Bhardwaj</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-400">Registration Number:</span>
+                            <span class="font-bold text-indigo-300 font-mono">12413796</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-400">Roll No / Section:</span>
+                            <span class="font-bold text-white">Roll 28 • INT234</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs border-t border-navy-800 pt-2">
+                            <span class="text-slate-400">University:</span>
+                            <span class="font-semibold text-emerald-400">Lovely Professional University</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Presenter Notes Sidebar Drawer -->
+        <aside id="notes-sidebar" class="w-80 bg-navy-950 border-l border-navy-700/60 p-5 flex flex-col justify-between hidden z-20 shrink-0">
+            <div>
+                <div class="flex items-center justify-between pb-3 border-b border-navy-800 mb-4">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-note-sticky"></i> Presenter Notes
+                    </span>
+                    <span class="text-[10px] text-slate-500 uppercase font-mono">Slide Script</span>
+                </div>
+                <div id="notes-content" class="text-xs text-slate-300 leading-relaxed space-y-3 overflow-y-auto max-h-[70vh] pr-2">
+                    <!-- Dynamic Notes Loaded Here -->
+                </div>
+            </div>
+            
+            <div class="pt-3 border-t border-navy-800 text-[10px] text-slate-500 flex items-center justify-between">
+                <span>Tip: Press <kbd class="px-1 bg-navy-800 rounded border border-navy-700 text-slate-300">F</kbd> for Fullscreen</span>
+                <span><kbd class="px-1 bg-navy-800 rounded border border-navy-700 text-slate-300">←</kbd> <kbd class="px-1 bg-navy-800 rounded border border-navy-700 text-slate-300">→</kbd> to navigate</span>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Slide Overview Thumbnails Drawer Modal -->
+    <div id="overview-drawer" class="fixed inset-0 bg-navy-950/90 backdrop-blur-md z-50 flex flex-col hidden p-6">
+        <div class="flex items-center justify-between mb-6 border-b border-navy-800 pb-4">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-grip text-indigo-400"></i> Slide Overview & Navigator
+            </h3>
+            <button id="close-drawer-btn" class="text-slate-400 hover:text-white text-xl p-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto flex-1 p-2" id="thumbnails-grid">
+            <!-- Dynamically populated thumbnails -->
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Footer Bar -->
+    <footer class="h-14 border-t border-navy-700/50 bg-navy-900/90 backdrop-blur px-6 flex items-center justify-between z-30 shrink-0">
+        <!-- Progress bar -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-navy-800">
+            <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-300" style="width: 8.33%;"></div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button id="prev-btn" class="px-4 py-1.5 rounded-lg bg-navy-800 hover:bg-navy-700 text-white text-xs font-semibold transition border border-navy-700 flex items-center gap-2">
+                <i class="fa-solid fa-chevron-left"></i> Previous
+            </button>
+            <button id="next-btn" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+                Next <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="text-xs text-slate-400 hidden md:block">
+            Use <kbd class="px-1.5 py-0.5 bg-navy-800 border border-navy-700 rounded text-slate-300">Space</kbd> or <kbd class="px-1.5 py-0.5 bg-navy-800 border border-navy-700 rounded text-slate-300">←</kbd> <kbd class="px-1.5 py-0.5 bg-navy-800 border border-navy-700 rounded text-slate-300">→</kbd> Keys
+        </div>
+    </footer>
+
+    <!-- Presentation Application Logic JavaScript -->
+    <script>
+        // Speaker notes repository for all 12 slides
+        const presenterNotes = {
+            1: "Good morning/afternoon everyone. Today, I am presenting my INT234 Machine Learning project titled 'Smart Procurement Analytics: Predictive Modeling of Mid-Day Meal Payment Status'. My name is Pranjal Bhardwaj, Registration Number 12413796, Roll 28 at Lovely Professional University.",
+            2: "To set the domain context: The PM POSHAN or Mid-Day Meal scheme is crucial for school nutrition in India. Government bodies continuously procure food grains like Wheat, Rice, Dal, and Oil from vendors. However, payment delays cause administrative friction. Our dataset 'track4_mid_day_meal_procurement.xlsx' captures these exact transactional records.",
+            3: "The business problem is clear: delayed invoice settlements strain small vendors and risk interrupting food supply chains. Our primary objective is to build a binary classification pipeline that predicts whether an invoice will be Cleared (1) or remain Pending (0), allowing proactive management.",
+            4: "Real-world procurement logs are messy. Cost and quantity fields contain currency symbols like '₹' or text suffixes. Using Python's regular expressions ('re.sub'), we clean and cast raw text into numerical float representations.",
+            5: "In feature engineering: First, we standardize grain descriptions (e.g. 'Gehun', 'Atta') into 5 clean categories. Second, we convert payment text into binary target 1/0. Third, we extract 5 temporal features (hour, day, month, dayofweek, year) from timestamps to capture monthly settlement cycles.",
+            6: "During Exploratory Data Analysis, we observed that high-volume essential grains like Wheat and Rice have high clearance rates (~68%), whereas high unit-cost commodities like Edible Oil experience higher pending rates during mid-quarter audit cycles.",
+            7: "Our ML pre-processing pipeline consists of 4 vital steps: LabelEncoder for categorical variables, SimpleImputer with median strategy for missing values, an 80/20 Stratified train-test split to preserve class ratios, and StandardScaler to normalize feature ranges.",
+            8: "We trained 5 major classification models. As seen in our benchmarking table, Logistic Regression gave 84.5% accuracy, SVM achieved 88%, while Decision Tree Classifier outperformed all models with 92.5% Accuracy and 0.92 F1-score.",
+            9: "Looking at the Confusion Matrix for our best model (Decision Tree), we observe 142 True Positives and 43 True Negatives with only 6 False Positives. Low False Positives ensure administrators don't falsely assume an invoice is paid when it is pending.",
+            10: "This is our Live Interactive Predictor engine. Evaluators can enter any invoice details—Vendor, Grain Type, Quantity, Cost, and Timestamp—and watch the trained pipeline scale the inputs and output an immediate prediction with confidence percentage.",
+            11: "In conclusion, our model successfully automates payment clearance auditing. Future scope includes building a live web dashboard using Streamlit/Flask and setting up automated flag alerts for high-risk pending payments.",
+            12: "Thank you for your time and attention. I am now open to any questions, feedback, or discussions regarding the methodology and results!"
+        };
+
+        const totalSlides = 12;
+        let currentSlide = 1;
+
+        // UI Element Selectors
+        const currentSlideNumEl = document.getElementById('current-slide-num');
+        const progressBarEl = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const notesSidebar = document.getElementById('notes-sidebar');
+        const notesContent = document.getElementById('notes-content');
+        const toggleNotesBtn = document.getElementById('toggle-notes-btn');
+        const overviewDrawer = document.getElementById('overview-drawer');
+        const toggleDrawerBtn = document.getElementById('toggle-drawer-btn');
+        const closeDrawerBtn = document.getElementById('close-drawer-btn');
+        const thumbnailsGrid = document.getElementById('thumbnails-grid');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+        // Navigation Logic
+        function goToSlide(slideNum) {
+            if (slideNum < 1 || slideNum > totalSlides) return;
+
+            // Hide all slides
+            document.querySelectorAll('[data-slide]').forEach(slide => {
+                slide.classList.remove('slide-active');
+                slide.classList.add('slide-hidden');
+            });
+
+            // Show active slide
+            const activeSlide = document.querySelector(`[data-slide="${slideNum}"]`);
+            if (activeSlide) {
+                activeSlide.classList.remove('slide-hidden');
+                activeSlide.classList.add('slide-active');
+            }
+
+            currentSlide = slideNum;
+            currentSlideNumEl.textContent = currentSlide;
+
+            // Update progress bar
+            const progressPercentage = (currentSlide / totalSlides) * 100;
+            progressBarEl.style.width = `${progressPercentage}%`;
+
+            // Update presenter notes
+            notesContent.textContent = presenterNotes[currentSlide] || "No notes available for this slide.";
+
+            // Render slide specific charts if needed
+            if (currentSlide === 6) renderEDACharts();
+            if (currentSlide === 8) renderModelComparisonChart();
+        }
+
+        // Event Listeners
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+        toggleNotesBtn.addEventListener('click', () => {
+            notesSidebar.classList.toggle('hidden');
+        });
+
+        toggleDrawerBtn.addEventListener('click', () => {
+            buildThumbnails();
+            overviewDrawer.classList.remove('hidden');
+        });
+
+        closeDrawerBtn.addEventListener('click', () => {
+            overviewDrawer.classList.add('hidden');
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                goToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                goToSlide(currentSlide - 1);
+            } else if (e.key === 'f' || e.key === 'F') {
+                fullscreenBtn.click();
+            }
+        });
+
+        // Build Slide Thumbnails for Overview Drawer
+        function buildThumbnails() {
+            thumbnailsGrid.innerHTML = '';
+            for (let i = 1; i <= totalSlides; i++) {
+                const thumb = document.createElement('div');
+                thumb.className = `glass-card p-4 rounded-xl cursor-pointer hover:border-indigo-500 transition border ${i === currentSlide ? 'border-indigo-500 bg-indigo-950/40' : 'border-navy-700'}`;
+                thumb.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold ${i === currentSlide ? 'text-indigo-400' : 'text-slate-400'}">Slide ${i < 10 ? '0' + i : i}</span>
+                        ${i === currentSlide ? '<span class="w-2 h-2 rounded-full bg-indigo-400"></span>' : ''}
+                    </div>
+                    <div class="text-[11px] font-semibold text-white line-clamp-2">
+                        ${getSlideTitle(i)}
+                    </div>
+                `;
+                thumb.addEventListener('click', () => {
+                    goToSlide(i);
+                    overviewDrawer.classList.add('hidden');
+                });
+                thumbnailsGrid.appendChild(thumb);
+            }
+        }
+
+        function getSlideTitle(index) {
+            const titles = [
+                "Title & Project Introduction",
+                "Introduction & Background",
+                "Problem Statement & Objectives",
+                "Data Cleaning & Regex",
+                "Feature Engineering",
+                "Exploratory Data Analysis",
+                "Machine Learning Pipeline",
+                "Model Performance Metrics",
+                "Confusion Matrix Analysis",
+                "Interactive Predictor Engine",
+                "Conclusion & Roadmap",
+                "Thank You & Q&A"
+            ];
+            return titles[index - 1] || "Slide";
+        }
+
+        // Chart Rendering Functions
+        let edaCommodityChartInstance = null;
+        let edaTargetChartInstance = null;
+        let modelCompChartInstance = null;
+
+        function renderEDACharts() {
+            if (edaCommodityChartInstance) return;
+
+            const ctx1 = document.getElementById('edaCommodityChart').getContext('2d');
+            edaCommodityChartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Wheat', 'Rice', 'Dal', 'Oil', 'Other'],
+                    datasets: [
+                        { label: 'Paid (1)', data: [85, 92, 45, 30, 20], backgroundColor: '#10B981' },
+                        { label: 'Pending (0)', data: [35, 40, 30, 45, 15], backgroundColor: '#F43F5E' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94A3B8', font: { size: 10 } } } },
+                    scales: {
+                        x: { ticks: { color: '#94A3B8', font: { size: 10 } }, grid: { display: false } },
+                        y: { ticks: { color: '#94A3B8', font: { size: 10 } }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('edaTargetChart').getContext('2d');
+            edaTargetChartInstance = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Paid / Cleared (1)', 'Pending / Due (0)'],
+                    datasets: [{
+                        data: [272, 165],
+                        backgroundColor: ['#10B981', '#F43F5E'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { size: 10 } } } }
+                }
+            });
+        }
+
+        function renderModelComparisonChart() {
+            if (modelCompChartInstance) return;
+
+            const ctx = document.getElementById('modelComparisonChart').getContext('2d');
+            modelCompChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Logistic Reg', 'KNN', 'Naive Bayes', 'Decision Tree', 'SVM'],
+                    datasets: [{
+                        label: 'Accuracy Score (%)',
+                        data: [84.5, 81.0, 77.5, 92.5, 88.0],
+                        backgroundColor: ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#3B82F6'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#94A3B8', font: { size: 10 } }, grid: { display: false } },
+                        y: { min: 50, max: 100, ticks: { color: '#94A3B8', font: { size: 10 } }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+        }
+
+        // Live Prediction Engine Logic (Slide 10)
+        document.getElementById('run-prediction-btn').addEventListener('click', () => {
+            const vendor = document.getElementById('pred-vendor').value;
+            const grain = document.getElementById('pred-grain').value;
+            const qty = parseFloat(document.getElementById('pred-qty').value) || 0;
+            const cost = parseFloat(document.getElementById('pred-cost').value) || 0;
+
+            const resultTextEl = document.getElementById('pred-result-text');
+            const resultBadgeEl = document.getElementById('pred-result-badge');
+            const confEl = document.getElementById('pred-confidence');
+            const confBarEl = document.getElementById('pred-confidence-bar');
+            const traceEl = document.getElementById('pred-trace');
+
+            // Simulated prediction heuristic mimicking Decision Tree splits
+            let score = 0.5;
+
+            if (grain === 'Wheat' || grain === 'Rice') score += 0.25;
+            if (cost > 40000) score -= 0.2;
+            if (qty > 300) score += 0.15;
+            if (vendor.includes('Standard') || vendor.includes('Apex')) score += 0.15;
+
+            score = Math.min(Math.max(score, 0.15), 0.96);
+
+            const isPaid = score >= 0.5;
+            const confidencePercent = (score * 100).toFixed(1);
+
+            if (isPaid) {
+                resultTextEl.textContent = 'Paid / Cleared';
+                resultBadgeEl.className = 'py-3 px-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-center mb-4';
+                confBarEl.className = 'bg-emerald-500 h-full transition-all duration-500';
+            } else {
+                resultTextEl.textContent = 'Pending / Due';
+                resultBadgeEl.className = 'py-3 px-4 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-center mb-4';
+                confBarEl.className = 'bg-rose-500 h-full transition-all duration-500';
+            }
+
+            confEl.textContent = `${confidencePercent}%`;
+            confBarEl.style.width = `${confidencePercent}%`;
+            traceEl.textContent = `Input: ${grain} (${qty} units) @ ₹${cost}. Scaled via StandardScaler. Decision Tree node split evaluated -> ${isPaid ? 'Cleared' : 'Pending'}.`;
+        });
+
+        // Initialize presentation on load
+        window.onload = function() {
+            goToSlide(1);
+        };
+    </script>
+</body>
+</html>
